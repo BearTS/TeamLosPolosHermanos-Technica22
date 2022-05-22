@@ -9,22 +9,16 @@ import tensorflow as tf
 from tensorflow import keras
 import pandas as pd
 import seaborn as sns
-from pylab import rcParams
 import matplotlib.pyplot as plt
-from matplotlib import rc
 from plotly import graph_objs as go
-import plotly.express as px
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.layers import Bidirectional, Dropout, Activation, Dense, LSTM
-from tensorflow.python.keras.layers import CuDNNLSTM
 from tensorflow.keras.models import Sequential
-import json
-import requests
 
 start = (date.today() - rd(years=1)).strftime("%Y-%m-%d")
 end =  date.today().strftime("%Y-%m-%d")
 
-st.image("https://cdn.discordapp.com/attachments/977301415645032532/977661652348600350/unknown-modified_1.png")
+st.image("https://cdn.discordapp.com/attachments/977301415645032532/977661652348600350/unknown-modified_1.png", width=200)
 st.title("CryptoClique")
 
 crypto = ("BTC-USD", "ETH-USD", "BNB-USD", "DOGE-USD")
@@ -73,15 +67,15 @@ def to_sequences(data, seq_len):
 
 def preprocess(data_raw, seq_len, train_split):
 
-    data = to_sequences(data_raw, seq_len)
+    data2 = to_sequences(data_raw, seq_len)
 
-    num_train = int(train_split * data.shape[0])
+    num_train = int(train_split * data2.shape[0])
 
-    X_train = data[:num_train, :-1, :]
-    y_train = data[:num_train, -1, :]
+    X_train = data2[:num_train, :-1, :]
+    y_train = data2[:num_train, -1, :]
 
-    X_test = data[num_train:, :-1, :]
-    y_test = data[num_train:, -1, :]
+    X_test = data2[num_train:, :-1, :]
+    y_test = data2[num_train:, -1, :]
 
     return X_train, y_train, X_test, y_test
 
@@ -139,3 +133,5 @@ fig2.add_trace(go.Scatter(x=data["Date"], y=y_test_inverse, name="Actual Price")
 fig2.add_trace(go.Scatter(x=data["Date"], y=y_hat_inverse, name="Predicted Price"))
 fig2.layout.update(title_text="Original vs Prediction", xaxis_rangeslider_visible=True)
 st.plotly_chart(fig2)
+
+print(data.tail())
