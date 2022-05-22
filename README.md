@@ -25,3 +25,43 @@
  <h1>About</h1>
   CryptoClique is an easy to use cryptocurrency trend prediction application. It was created to make investing in cryptocurrencies easier for people without prior knowledge. It uses the LSTM Neural Network to predict the output.
 </div>
+
+<br/>
+
+# Screenshots
+
+![CryptoClique](https://media.discordapp.net/attachments/977301415645032532/977830728043753512/unknown.png?width=1225&height=662)
+![](https://media.discordapp.net/attachments/977301415645032532/977830826442125312/unknown.png?width=1440&height=589)
+![](https://media.discordapp.net/attachments/977301415645032532/977830899083276368/unknown.png?width=1285&height=663)
+
+# Hosting
+### Deploy using Docker 
+
+We have docker images available so Just Do This:
+
+```bash
+docker pull bearts/cryptoclique
+docker run -p 8501:8501 bearts/cryptoclique
+```
+
+or can build your own image using the following commands:
+
+```bash
+docker build -t cryptoclique .
+```
+and run the image by the following command:
+
+```bash
+docker run -p 8501:8501 cryptoclique
+```
+### Deploying (Without Using Docker)
+
+- Install Python <=3.9 and pip >=20
+- Run the following commands:
+  
+```bash
+pip install -r requirements.txt
+```
+```bash
+streamlit run webapp.py
+```
