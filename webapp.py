@@ -13,6 +13,7 @@ from pylab import rcParams
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from plotly import graph_objs as go
+import plotly.express as px
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.layers import Bidirectional, Dropout, Activation, Dense, LSTM
 from tensorflow.python.keras.layers import CuDNNLSTM
@@ -49,3 +50,91 @@ def plot_data():
     st.plotly_chart(fig)
 
 plot_data()
+
+
+#normalisation
+scaler = MinMaxScaler()
+close_price = data.Close.values.reshape(-1, 1)
+scaled_close = scaler.fit_transform(close_price)
+scaled_close = scaled_close.reshape(-1, 1)
+
+
+#preprocessing
+SEQ_LEN = 20
+
+def to_sequences(data, seq_len):
+    d = []
+
+    for index in range(len(data) - seq_len):
+        d.append(data[index: index + seq_len])
+
+    return np.array(d)
+
+def preprocess(data_raw, seq_len, train_split):
+
+    data = to_sequences(data_raw, seq_len)
+
+    num_train = int(train_split * data.shape[0])
+
+    X_train = data[:num_train, :-1, :]
+    y_train = data[:num_train, -1, :]
+
+    X_test = data[num_train:, :-1, :]
+    y_test = data[num_train:, -1, :]
+
+    return X_train, y_train, X_test, y_test
+
+
+X_train, y_train, X_test, y_test = preprocess(scaled_close, SEQ_LEN, train_split = 0.8)
+
+
+#model
+DROPOUT = 0.2
+WINDOW_SIZE = SEQ_LEN - 1
+
+model = keras.Sequential()
+
+model.add(Bidirectional(LSTM(WINDOW_SIZE, return_sequences=True),
+                        input_shape=(WINDOW_SIZE, X_train.shape[-1])))
+model.add(Dropout(rate=DROPOUT))
+
+model.add(Bidirectional(LSTM((WINDOW_SIZE * 2), return_sequences=True)))
+model.add(Dropout(rate=DROPOUT))
+
+model.add(Bidirectional(LSTM(WINDOW_SIZE, return_sequences=False)))
+
+model.add(Dense(units=1))
+
+model.add(Activation('linear'))
+
+
+#training
+model.compile(
+    loss='mean_squared_error', 
+    optimizer='adam'
+)
+
+BATCH_SIZE = 64
+
+history = model.fit(
+    X_train, 
+    y_train, 
+    epochs=100, 
+    batch_size=BATCH_SIZE, 
+    shuffle=False,
+    validation_split=0.1
+)
+
+
+#prediction
+y_hat = model.predict(X_test)
+
+y_test_inverse = (scaler.inverse_transform(y_test)).flatten()
+y_hat_inverse = (scaler.inverse_transform(y_hat)).flatten()
+
+st.subheader("Bitcoin Price Predictor")
+fig2 = go.Figure()
+fig2.add_trace(go.Scatter(x=data["Date"], y=y_test_inverse, name="Actual Price"))
+fig2.add_trace(go.Scatter(x=data["Date"], y=y_hat_inverse, name="Predicted Price"))
+fig2.layout.update(title_text="Original vs Prediction", xaxis_rangeslider_visible=True)
+st.plotly_chart(fig2)
