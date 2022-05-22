@@ -132,7 +132,7 @@ y_hat = model.predict(X_test)
 y_test_inverse = (scaler.inverse_transform(y_test)).flatten()
 y_hat_inverse = (scaler.inverse_transform(y_hat)).flatten()
 
-st.subheader("Bitcoin Price Predictor")
+st.subheader("CryptoCurrency Price Predictor")
 fig2 = go.Figure()
 fig2.add_trace(go.Scatter(x=data["Date"], y=y_test_inverse, name="Actual Price"))
 fig2.add_trace(go.Scatter(x=data["Date"], y=y_hat_inverse, name="Predicted Price"))
