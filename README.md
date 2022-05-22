@@ -1,3 +1,7 @@
+[GDrive](https://drive.google.com/drive/folders/1RkzaHp78q03OGL178ayIdtT1qewzsgAT)
+
+[Click here to visit](https://5b65-136-233-9-102.in.ngrok.io/)
+
 <h1 align="center">Technica22🗿</h1>
 
 <div align="center">
@@ -65,3 +69,10 @@ pip install -r requirements.txt
 ```bash
 streamlit run webapp.py
 ```
+
+## Contributors
+
+- [Urvi Singhal](https://github.com/urvisinghal/)
+- [Nishchay Sinha](https://github.com/nishchaysinha)
+- [Anuj Parihar](https://github.com/bearts)
+- [Mehul Rastogi](https://github.com/sm0se)
