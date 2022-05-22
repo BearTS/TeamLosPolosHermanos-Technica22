@@ -24,7 +24,7 @@ import requests
 start = (date.today() - rd(years=1)).strftime("%Y-%m-%d")
 end =  date.today().strftime("%Y-%m-%d")
 
-st.title("Crypto Currency Predictor")
+st.title("CryptoClique")
 
 crypto = ("BTC-USD", "ETH-USD", "BNB-USD", "DOGE-USD")
 crypto_selected = st.selectbox("Select the currency for prediction", crypto)
