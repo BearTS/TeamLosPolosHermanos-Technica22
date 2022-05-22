@@ -1,0 +1,10 @@
+streamlit
+yfinance
+datetime
+numpy
+tensorflow
+pandas
+seaborn
+pylab-sdk
+plotly
+sklearn
