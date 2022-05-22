@@ -106,7 +106,7 @@ model.add(Activation('linear'))
 #training
 model.compile(
     loss='mean_squared_error', 
-    optimizer='adam'
+    optimizer='adam',
 )
 
 BATCH_SIZE = 64
