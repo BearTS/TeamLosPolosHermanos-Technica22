@@ -21,7 +21,7 @@ end =  date.today().strftime("%Y-%m-%d")
 st.image("https://cdn.discordapp.com/attachments/977301415645032532/977661652348600350/unknown-modified_1.png", width=200)
 st.title("CryptoClique")
 
-crypto = ("BTC-USD", "ETH-USD", "BNB-USD", "DOGE-USD")
+crypto = ("BTC-USD", "ETH-USD", "BNB-USD", "DOGE-USD", "USDT-USD", "USDC-USD", "XRP-USD", "HEX-USD", "BUSD-USD", "ADA-USD", "SOL-USD", "DOT-USD", "WBTC-USD", "AVAX-USD", "WTRX-USD", "TRX-USD", "STETH-USD", "DAI-USD", "SHIB-USD", "MATIC-USD", "LTC-USD", "CRO-USD", "LEO-USD", "YOUC-USD", "NEAR-USD")
 crypto_selected = st.selectbox("Select the currency for prediction", crypto)
 
 @st.cache
@@ -30,7 +30,7 @@ def load_data(ticker):
     data.reset_index(inplace=True)
     return data
 
-data = load_data(crypto_selected)
+data = load_data(crypto_selected).sort_values(by='Date',ascending=False)
 
 st.subheader("Dataset")
 st.write(data.head())
@@ -67,20 +67,20 @@ def to_sequences(data, seq_len):
 
 def preprocess(data_raw, seq_len, train_split):
 
-    data2 = to_sequences(data_raw, seq_len)
+    data = to_sequences(data_raw, seq_len)
 
-    num_train = int(train_split * data2.shape[0])
+    num_train = int(train_split * data.shape[0])
 
-    X_train = data2[:num_train, :-1, :]
-    y_train = data2[:num_train, -1, :]
+    X_train = data[:num_train, :-1, :]
+    y_train = data[:num_train, -1, :]
 
-    X_test = data2[num_train:, :-1, :]
-    y_test = data2[num_train:, -1, :]
+    X_test = data[num_train:, :-1, :]
+    y_test = data[num_train:, -1, :]
 
     return X_train, y_train, X_test, y_test
 
 
-X_train, y_train, X_test, y_test = preprocess(scaled_close, SEQ_LEN, train_split = 0.8)
+X_train, y_train, X_test, y_test = preprocess(scaled_close, SEQ_LEN, train_split = 0.75)
 
 
 #model
@@ -133,5 +133,3 @@ fig2.add_trace(go.Scatter(x=data["Date"], y=y_test_inverse, name="Actual Price")
 fig2.add_trace(go.Scatter(x=data["Date"], y=y_hat_inverse, name="Predicted Price"))
 fig2.layout.update(title_text="Original vs Prediction", xaxis_rangeslider_visible=True)
 st.plotly_chart(fig2)
-
-print(data.tail())
